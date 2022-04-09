@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_test"
+    app:startDestination="@id/testFragment2">
+
+    <fragment
+        android:id="@+id/testFragment2"
+        android:name="com.hld.myapplication2.testnavigation.TestFragment2"
+        android:label="TestFragment2" />
+    <fragment
+        android:id="@+id/testFragment3"
+        android:name="com.hld.myapplication2.testnavigation.TestFragment3"
+        android:label="TestFragment3" />
+</navigation>
