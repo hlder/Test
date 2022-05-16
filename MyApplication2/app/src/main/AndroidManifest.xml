@@ -13,13 +13,14 @@
         android:theme="@style/Theme.MyApplication2">
         <activity android:name=".particles.ParticleActivity">
         </activity>
-        <activity android:name=".testnavigation.TestActivity">
+        <activity android:name=".TestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".TestActivity2"/>
     </application>
 
 </manifest>

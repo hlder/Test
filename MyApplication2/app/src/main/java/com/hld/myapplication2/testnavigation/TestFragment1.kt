@@ -32,4 +32,9 @@ class TestFragment1 : Fragment(){
         }
         return fragmentTest1Binding.root
     }
+
+    fun a(){
+        val name = arguments?.getString("name")
+        val id = arguments?.getInt("id")
+    }
 }
