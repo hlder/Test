@@ -6,6 +6,9 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 
+/**
+ * 橡皮檫，擦除控件
+ */
 class EraserView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) :
     View(context, attrs, defStyleAttr, defStyleRes) {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
@@ -86,8 +89,8 @@ class EraserView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defS
 
     private val bitmapPaint = Paint()
 
-    private val listPath = ArrayList<Path>()
-    private val undoListPath = ArrayList<Path>()
+    private val listPath = ArrayList<EraserPath>()
+    private val undoListPath = ArrayList<EraserPath>()
 
     private var downPoint: PointF? = null
     private val downPointPaint by lazy {
@@ -98,9 +101,19 @@ class EraserView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defS
         }
     }
 
+    // 橡皮擦的圆形paint
+    private val eraserCirclePaint by lazy {
+        Paint().apply {
+            color = eraserColor
+            style = Paint.Style.FILL
+            isAntiAlias = true
+        }
+    }
+
     private var touchDownPath: Path? = null // 按下去赋值，离开置空，主要用于比例换算
     private val path = Path()
     private val pathPaint = Paint().apply {
+        strokeWidth = paintStrokeWidth
         color = paintColor
         style = Paint.Style.STROKE
         isAntiAlias = true
@@ -163,10 +176,9 @@ class EraserView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defS
         eraserBitmap?.let {
             canvas?.drawBitmap(it, src, bitmapDstRect, bitmapPaint)
         }
-        pathPaint.strokeWidth = paintStrokeWidth * zoom
         canvas?.drawPath(path, pathPaint)
         downPoint?.let {
-            canvas?.drawCircle(it.x, it.y, paintStrokeWidth * zoom, downPointPaint)
+            canvas?.drawCircle(it.x, it.y, paintStrokeWidth / 2f, downPointPaint)
         }
     }
 
@@ -188,8 +200,17 @@ class EraserView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defS
             touchDownPath?.lineTo(event.x * blx, event.y * bly)
             invalidate()
         } else if (event?.action == MotionEvent.ACTION_UP || event?.action == MotionEvent.ACTION_CANCEL) {
-            if(event.action == MotionEvent.ACTION_UP){
-                touchDownPath?.let { listPath.add(it) }
+            if (event.action == MotionEvent.ACTION_UP) {
+                touchDownPath?.let {
+                    val paint = Paint(pathPaint)
+                    paint.strokeWidth = blx * paintStrokeWidth
+                    paint.color = eraserColor
+                    val dPoint = downPoint?.let { dp ->
+                        PointF(dp.x * blx, dp.y * bly)
+                    }
+                    val uPoint = PointF(event.x * blx, event.y * bly)
+                    listPath.add(EraserPath(it, paint, dPoint, uPoint))
+                }
                 undoListPath.clear()
             }
             path.reset()
@@ -204,21 +225,17 @@ class EraserView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defS
      * 改变橡皮檫画布的内容,重新绘制橡皮檫画布
      */
     private fun resetEraserCanvas() {
-        val bl = eraserBitmap?.let {
-            it.width.toFloat() / width
-        } ?: return
-
-        val paint = Paint().apply {
-            strokeWidth = paintStrokeWidth * bl * zoom
-            style = Paint.Style.STROKE
-            color = eraserColor
-            isAntiAlias = true
-        }
-
         eraserBitmapCanvas?.let {
             it.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR) // 清空画布
-            listPath.forEach { path ->
-                it.drawPath(path, paint)
+            listPath.forEach { item ->
+                // 绘制线条
+                it.drawPath(item.path, item.paint)
+                // 绘制初始点的圆，让线条更圆润
+                item.downPoint?.let { dp ->
+                    it.drawCircle(dp.x, dp.y, item.paint.strokeWidth / 2f, eraserCirclePaint)
+                }
+                // 绘制结束点的圆，让线条更圆润
+                it.drawCircle(item.upPoint.x,item.upPoint.y,item.paint.strokeWidth / 2f, eraserCirclePaint)
             }
             invalidate()
         }

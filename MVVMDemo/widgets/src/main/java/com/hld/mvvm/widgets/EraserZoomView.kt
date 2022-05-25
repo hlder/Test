@@ -12,6 +12,9 @@ import android.view.ViewGroup
 import kotlin.math.abs
 import kotlin.math.sqrt
 
+/**
+ * 支持缩放，双指滑动的擦除控件
+ */
 class EraserZoomView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) :
     ViewGroup(context, attrs, defStyleAttr, defStyleRes) {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
@@ -20,6 +23,7 @@ class EraserZoomView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, 
         defStyleAttr,
         0
     )
+
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context) : this(context, null)
 
@@ -38,7 +42,7 @@ class EraserZoomView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, 
 
     private val centerPoint: PointF = PointF()
 
-    private var zoom = 1f
+    private var zoom = INIT_ZOOM
         set(value) {
             field = value
             eraserView.zoom = zoom
@@ -49,7 +53,7 @@ class EraserZoomView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, 
 
     private val downPoint1: PointF = PointF()
     private val downPoint2: PointF = PointF()
-    private var downZoom = 0f
+    private var downZoom = INIT_ZOOM
     private var downExcursionX = 0f //按下时的x的偏移量
     private var downExcursionY = 0f //按下时的y的偏移量
 
@@ -78,7 +82,7 @@ class EraserZoomView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, 
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if(animatorSet?.isRunning == true){ // 如果正在动画中，则拦截，但不处理
+        if (animatorSet?.isRunning == true) { // 如果正在动画中，则拦截，但不处理
             return true
         }
         if (event.action == MotionEvent.ACTION_MOVE) {
@@ -93,8 +97,8 @@ class EraserZoomView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, 
                 // 计算缩放比例
                 if (downGap != 0f) {
                     zoom = downZoom * nowGap / downGap
-                    if (zoom < 1) {
-                        zoom = 1f
+                    if (zoom < INIT_ZOOM) {
+                        zoom = INIT_ZOOM
                     }
                 }
 
@@ -107,13 +111,25 @@ class EraserZoomView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, 
                 val centerY = (nowPoint1.y + nowPoint2.y) / 2
 
                 val downWidth = eraserViewWidth * downZoom // 按下时的宽度
-                val downWidthBl = (downCenterX - downExcursionX) / downWidth // 按下时所占控件的比例
+                var downWidthBl = (downCenterX - downExcursionX) / downWidth // 按下时所占控件的比例
+                if (downWidthBl > 1) {
+                    downWidthBl = 1f
+                }
+                if (downWidthBl < 0) {
+                    downWidthBl = 0f
+                }
                 val nowWidth = eraserViewWidth * zoom // 最新的宽度
                 val zoomWidth = nowWidth - eraserViewWidth * downZoom // 缩放的宽度
                 excursionLeft = downExcursionX + (centerX - downCenterX) - zoomWidth * downWidthBl
 
                 val downHeight = eraserViewHeight * downZoom // 按下时的宽度
-                val downHeightBl = (downCenterY - downExcursionY) / downHeight // 按下时所占控件的比例
+                var downHeightBl = (downCenterY - downExcursionY) / downHeight // 按下时所占控件的比例
+                if (downHeightBl > 1) {
+                    downHeightBl = 1f
+                }
+                if (downHeightBl < 0) {
+                    downHeightBl = 0f
+                }
                 val nowHeight = eraserViewHeight * zoom // 最新的高度
                 val zoomHeight = nowHeight - eraserViewHeight * downZoom // 缩放的高度
                 excursionTop = downExcursionY + (centerY - downCenterY) - zoomHeight * downHeightBl
@@ -123,15 +139,14 @@ class EraserZoomView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, 
 
                 // 刷新子控件的大小和位置
                 resetEraserViewLayout()
+
+                println("==============zoom:$zoom excursionLeft:$excursionLeft excursionTop:$excursionTop")
             }
         }
         return true
     }
 
-    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
-        if(animatorSet?.isRunning == true){ // 如果正在动画中，则拦截，但不处理
-            return true
-        }
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         if ((ev.action and MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_DOWN) { // 多指触控进行拦截
             if (ev.pointerCount > 1) {
                 downPoint1.x = ev.getX(0)
@@ -146,6 +161,15 @@ class EraserZoomView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, 
                 downExcursionX = excursionLeft
                 downExcursionY = excursionTop
             }
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
+    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+        if (animatorSet?.isRunning == true) { // 如果正在动画中，则拦截，但不处理
+            return true
+        }
+        if ((ev.action and MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_DOWN) { // 多指触控进行拦截
             return true
         }
         return super.onInterceptTouchEvent(ev)
@@ -226,7 +250,7 @@ class EraserZoomView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, 
         if (animatorSet?.isRunning == true) { // 如果有动画在运行，则不再执行新的动画
             return
         }
-        val animZoom = ValueAnimator.ofFloat(zoom, 1f)
+        val animZoom = ValueAnimator.ofFloat(zoom, INIT_ZOOM)
         animZoom.addUpdateListener {
             zoom = it.animatedValue as Float
             limitExcursion() // 限制偏移量

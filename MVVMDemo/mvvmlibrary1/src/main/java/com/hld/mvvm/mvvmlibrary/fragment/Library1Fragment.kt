@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.hld.mvvm.mvvmlibrary1.R
 import com.hld.mvvm.mvvmlibrary1.databinding.FragmentLibrary1Binding
 
 class Library1Fragment : Fragment() {
@@ -17,7 +18,9 @@ class Library1Fragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentLibrary1Binding.inflate(inflater)
-        binding.zoomView.setBitmap(BitmapFactory.decodeResource(resources, android.R.mipmap.sym_def_app_icon))
+//        binding.zoomView.setBitmap(BitmapFactory.decodeResource(resources, R.mipmap.test))
+        binding.zoomView.setBitmap(BitmapFactory.decodeResource(resources, R.mipmap.test2))
+//        binding.zoomView.setBitmap(BitmapFactory.decodeResource(resources, android.R.mipmap.sym_def_app_icon))
 
         binding.button1.setOnClickListener{
             binding.zoomView.undo()
