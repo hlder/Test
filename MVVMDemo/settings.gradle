@@ -1,0 +1,9 @@
+include ':app'
+include ':home'
+include ':common'
+include ':mvvmlibrary1api'
+include ':mvvmlibrary1'
+include ':mvvmlibrary2api'
+include ':mvvmlibrary2'
+rootProject.name = "MVVMDemo"
+include ':widgets'
