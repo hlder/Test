@@ -22,7 +22,7 @@ class Library1Fragment : Fragment() {
         binding.zoomView.setBitmap(BitmapFactory.decodeResource(resources, R.mipmap.test2))
 //        binding.zoomView.setBitmap(BitmapFactory.decodeResource(resources, android.R.mipmap.sym_def_app_icon))
 
-        binding.zoomView.maxZoom = 3
+        binding.zoomView.maxZoom = 99999
         binding.button1.setOnClickListener{
             binding.zoomView.undo()
         }
