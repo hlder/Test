@@ -27,6 +27,8 @@ class EraserZoomView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context) : this(context, null)
 
+    var maxZoom = 99 // 最大倍数
+
     private val eraserView: EraserView = EraserView(context)
 
     private var animatorSet: AnimatorSet? = null
@@ -83,7 +85,7 @@ class EraserZoomView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, 
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (animatorSet?.isRunning == true) { // 如果正在动画中，则拦截，但不处理
-            return true
+            return false
         }
         if (event.action == MotionEvent.ACTION_MOVE) {
             if (event.pointerCount > 1) {
@@ -99,6 +101,9 @@ class EraserZoomView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, 
                     zoom = downZoom * nowGap / downGap
                     if (zoom < INIT_ZOOM) {
                         zoom = INIT_ZOOM
+                    }
+                    if (zoom > maxZoom) {
+                        zoom = maxZoom.toFloat()
                     }
                 }
 
@@ -147,7 +152,9 @@ class EraserZoomView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, 
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        if ((ev.action and MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_DOWN) { // 多指触控进行拦截
+        if ((ev.action and MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_DOWN
+            && animatorSet?.isRunning != true
+        ) { // 多指触控进行拦截
             if (ev.pointerCount > 1) {
                 downPoint1.x = ev.getX(0)
                 downPoint1.y = ev.getY(0)
