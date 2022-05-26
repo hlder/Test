@@ -6,7 +6,7 @@ import android.graphics.PointF
 
 data class EraserPath(
     val path: Path,
-    val paint:Paint,
-    val downPoint:PointF?,
-    val upPoint:PointF
+    val paint: Paint,
+    val downPoint: PointF?,
+    val upPoint: PointF
 )

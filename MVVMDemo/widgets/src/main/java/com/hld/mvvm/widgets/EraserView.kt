@@ -22,6 +22,11 @@ class EraserView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defS
     constructor(context: Context) : this(context, null)
 
     /**
+     * 擦除监听
+     */
+    var eraserListener:EraserListener? = null
+
+    /**
      * 画笔的颜色
      */
     var paintColor = Color.BLUE
@@ -150,6 +155,7 @@ class EraserView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defS
         if (undoListPath.size > 0) {
             listPath.add(undoListPath.removeAt(undoListPath.size - 1))
             resetEraserCanvas()
+            eraserListener?.onaAdvance()
         }
     }
 
@@ -160,7 +166,18 @@ class EraserView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defS
         if (listPath.size > 0) {
             undoListPath.add(listPath.removeAt(listPath.size - 1))
             resetEraserCanvas()
+            eraserListener?.onUndo()
         }
+    }
+
+    /**
+     * 清楚所有的path
+     */
+    fun clearPath() {
+        undoListPath.clear()
+        listPath.clear()
+        resetEraserCanvas()
+        eraserListener?.onClearPath()
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -212,6 +229,7 @@ class EraserView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defS
                     listPath.add(EraserPath(it, paint, dPoint, uPoint))
                 }
                 undoListPath.clear()
+                eraserListener?.onErasure()
             }
             path.reset()
             downPoint = null
@@ -235,7 +253,12 @@ class EraserView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defS
                     it.drawCircle(dp.x, dp.y, item.paint.strokeWidth / 2f, eraserCirclePaint)
                 }
                 // 绘制结束点的圆，让线条更圆润
-                it.drawCircle(item.upPoint.x,item.upPoint.y,item.paint.strokeWidth / 2f, eraserCirclePaint)
+                it.drawCircle(
+                    item.upPoint.x,
+                    item.upPoint.y,
+                    item.paint.strokeWidth / 2f,
+                    eraserCirclePaint
+                )
             }
             invalidate()
         }

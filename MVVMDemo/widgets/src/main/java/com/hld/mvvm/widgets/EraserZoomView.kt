@@ -247,6 +247,8 @@ class EraserZoomView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, 
     fun setBitmap(bitmap: Bitmap) {
         eraserView.bitmap = bitmap
         initEraserViewSize()
+        resetEraserViewLayout()
+        eraserView.clearPath()
     }
 
 
@@ -276,6 +278,13 @@ class EraserZoomView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, 
         animatorSet?.playTogether(animZoom, animTop, animLeft)
         animatorSet?.duration = ANIM_DURATION
         animatorSet?.start()
+    }
+
+    /**
+     * 设置擦除监听
+     */
+    fun setEraserListener(eraserListener: EraserListener) {
+        eraserView.eraserListener = eraserListener
     }
 
     /**
