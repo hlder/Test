@@ -144,8 +144,6 @@ class EraserZoomView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, 
 
                 // 刷新子控件的大小和位置
                 resetEraserViewLayout()
-
-                println("==============zoom:$zoom excursionLeft:$excursionLeft excursionTop:$excursionTop")
             }
         }
         return true
