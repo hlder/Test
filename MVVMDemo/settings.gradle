@@ -7,3 +7,6 @@ include ':mvvmlibrary2api'
 include ':mvvmlibrary2'
 rootProject.name = "MVVMDemo"
 include ':widgets'
+include 'koinloader-compiler'
+include 'koinloader'
+include ':koinloader-demo'
