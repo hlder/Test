@@ -62,8 +62,9 @@ dependencies {
     implementation project(":mvvmlibrary1")
     implementation project(":mvvmlibrary2")
     implementation "io.insert-koin:koin-core:3.2.0"
+    implementation project(':koinloader-annotation')
 
-    implementation project(":koinloader")
     kapt project(":koinloader-compiler")
+    implementation project(":koinloader-api")
     implementation project(":koinloader-demo")
 }

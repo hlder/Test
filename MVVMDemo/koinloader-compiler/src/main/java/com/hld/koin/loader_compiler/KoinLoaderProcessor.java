@@ -1,6 +1,7 @@
 package com.hld.koin.loader_compiler;
 
 import com.google.auto.service.AutoService;
+import com.hld.koin.loader.KoinLoaderConstant;
 import com.hld.koin.loader.KoinModule;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
@@ -23,7 +24,7 @@ import javax.lang.model.type.TypeMirror;
 
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({"com.hld.koin.loader.KoinModule"})
-public class ProxyProcessor extends AbstractProcessor {
+public class KoinLoaderProcessor extends AbstractProcessor {
     private List<String> listAddModule = new LinkedList<>();
 
     @Override
@@ -42,7 +43,7 @@ public class ProxyProcessor extends AbstractProcessor {
                 TypeMirror superClassTypeMirror = element.asType();
 
                 System.out.println("=========ProxyProcessor process2:" + superClassTypeMirror.toString());
-                listAddModule.add("listModules.add(new " + superClassTypeMirror.toString() + "().getModules())");
+                listAddModule.add("listModules.addAll(new " + superClassTypeMirror.toString() + "().getModules())");
 
 
                 //1.先拿到class,和包名
@@ -58,18 +59,23 @@ public class ProxyProcessor extends AbstractProcessor {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("getModules")
                 .addModifiers(Modifier.PUBLIC)
                 .returns(List.class);
+        builder.addStatement("listModules = new LinkedList<org.koin.core.module.Module>()");
         for (String item : listAddModule) {
             builder.addStatement(item);
         }
         MethodSpec beyond = builder
                 .addStatement("return listModules")
                 .build();
-        TypeSpec hello = TypeSpec.classBuilder("HelloWorld")
+
+        String packageName = KoinLoaderConstant.KOIN_LOADER_PROVIDER_PACKAGE_NAME;
+        String className = "KoinModuleProvider" + hashCode();
+
+        TypeSpec hello = TypeSpec.classBuilder(className)
+                .addModifiers(Modifier.PUBLIC)
                 .addMethod(beyond)
                 .addField(listModules)
                 .build();
-
-        JavaFile javaFile = JavaFile.builder("com.example.helloworld", hello)
+        JavaFile javaFile = JavaFile.builder(packageName, hello)
                 .build();
 
         try {

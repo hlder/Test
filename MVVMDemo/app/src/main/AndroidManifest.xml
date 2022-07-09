@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:name=".MainApplication"
         android:theme="@style/Theme.MVVMDemo">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

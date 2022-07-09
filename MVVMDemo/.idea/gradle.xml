@@ -14,7 +14,8 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/home" />
-            <option value="$PROJECT_DIR$/koinloader" />
+            <option value="$PROJECT_DIR$/koinloader-annotation" />
+            <option value="$PROJECT_DIR$/koinloader-api" />
             <option value="$PROJECT_DIR$/koinloader-compiler" />
             <option value="$PROJECT_DIR$/koinloader-demo" />
             <option value="$PROJECT_DIR$/mvvmlibrary1" />
