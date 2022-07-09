@@ -25,32 +25,21 @@ import javax.lang.model.type.TypeMirror;
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({"com.hld.koin.loader.KoinModule"})
 public class KoinLoaderProcessor extends AbstractProcessor {
-    private List<String> listAddModule = new LinkedList<>();
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
-        System.out.println("=========ProxyProcessor process");
         if (set.isEmpty()) {
             return false;
         }
+        List<String> listAddModule = new LinkedList<>();
 
         Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(KoinModule.class);
-
 
         for (Element element : elements) {
             KoinModule testApt = element.getAnnotation(KoinModule.class);
             if (testApt != null) {
                 TypeMirror superClassTypeMirror = element.asType();
-
-                System.out.println("=========ProxyProcessor process2:" + superClassTypeMirror.toString());
                 listAddModule.add("listModules.addAll(new " + superClassTypeMirror.toString() + "().getModules())");
-
-
-                //1.先拿到class,和包名
-                //2.创建class继承上面的class
-                //3.重写父类class中的所有方法，并增加调用代理方法的代码
-                //4.创建代码
-
             }
         }
 
@@ -85,6 +74,4 @@ public class KoinLoaderProcessor extends AbstractProcessor {
         }
         return true;
     }
-
-
 }

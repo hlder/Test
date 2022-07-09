@@ -32,8 +32,6 @@ android {
 
 dependencies {
     implementation "io.insert-koin:koin-core:3.2.0"
-    implementation project(':koinloader-annotation')
-
+    implementation project(':koinloader-api')
     kapt project(":koinloader-compiler")
-
 }
