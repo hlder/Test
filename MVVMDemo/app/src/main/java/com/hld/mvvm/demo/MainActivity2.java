@@ -1,9 +1,12 @@
 package com.hld.mvvm.demo;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.hld.mvvm.koinloader_demo.KoinLoaderDemoActivity;
 
 import org.koin.java.KoinJavaComponent;
 
@@ -17,6 +20,7 @@ public class MainActivity2 extends AppCompatActivity {
 
             TestBean t = KoinJavaComponent.get(TestBean.class);
             System.out.println("-------------t:" + t.testStr());
+            startActivity(new Intent(MainActivity2.this, KoinLoaderDemoActivity.class));
         });
     }
 }

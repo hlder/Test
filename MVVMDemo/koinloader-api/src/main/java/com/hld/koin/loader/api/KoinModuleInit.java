@@ -57,6 +57,7 @@ public class KoinModuleInit {
             for (Enumeration iter = df.entries(); iter.hasMoreElements(); ) {
                 String clsName = "" + iter.nextElement();
                 if (clsName.startsWith(KoinLoaderConstant.KOIN_LOADER_PROVIDER_PACKAGE_NAME)) {
+                    System.out.println("load module:" + clsName);
                     try {
                         long startTime = Calendar.getInstance().getTimeInMillis();
                         Class<?> cls = classLoader.loadClass(clsName);

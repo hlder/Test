@@ -18,6 +18,7 @@ class MainApplication:Application() {
         startKoin {
         }
         val modules:List<Module> = KoinModuleInit.getListModules(this@MainApplication)
+        println("========modules size:${modules.size}")
         loadKoinModules(modules)
     }
 }

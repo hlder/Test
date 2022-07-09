@@ -1,17 +1,16 @@
-package com.hld.mvvm.demo
+package com.hld.mvvm.koinloader_demo
 
 import com.hld.koin.loader.KoinModule
 import com.hld.koin.loader.KoinModuleProvider
-
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
 @KoinModule
-class AppTestKoinLoader : KoinModuleProvider {
+class TestKoinLoader2 : KoinModuleProvider {
     override fun getModules(): List<Module> {
-        return mutableListOf(
+        return listOf(
             module {
-                factory { TestBean() }
+                factory { TestDemoBean2() }
             }
         )
     }
