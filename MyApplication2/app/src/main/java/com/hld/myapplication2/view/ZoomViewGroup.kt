@@ -20,10 +20,10 @@ class ZoomViewGroup @JvmOverloads constructor(
             }
             (event.action and MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_DOWN -> { // 多指按下
                 zoom.touchDown2(
-                    event.getRawX(0),
-                    event.getRawY(0),
-                    event.getRawX(1),
-                    event.getRawY(1)
+                    event.getX(0),
+                    event.getY(0),
+                    event.getX(1),
+                    event.getY(1)
                 )
             }
             event.action == MotionEvent.ACTION_MOVE -> { // 移动

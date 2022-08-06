@@ -55,50 +55,34 @@ class ViewZoomController(private val view: ViewGroup) {
 
 
 
-            translation(Float.MAX_VALUE, Float.MAX_VALUE)
-
             val downCenterX = abs(downPoint1.x + downPoint2.x) / 2f
             val downCenterY = abs(downPoint1.y + downPoint2.y) / 2f
 
-            val xBl = downCenterX / view.width
-            val yBl = downCenterY / view.height
+            val nowCenterX = abs(event.getRawX(0) + event.getRawX(1)) / 2f
+            val nowCenterY = abs(event.getRawY(0) + event.getRawY(1)) / 2f
+
+            val downPyX = (view.width * downScaleX) / 2 - downTranslationX
+            val downPyY = (view.height * downScaleY) / 2 - downTranslationY
+
+//            translation(-(nowCenterX - downPyX) * scale, -(nowCenterY - downPyY) * scale)
 
             val zoomView = getZoomView() ?: return
-            val realWidth = zoomView.width * zoomView.scaleX
-            val realHeight = zoomView.height * zoomView.scaleY
 
-            val zoomTX = -realWidth * xBl
-            val zoomTY = -realHeight * yBl
-
-            println("========xBl:$xBl yBl:$yBl zoomTx:$zoomTX zoomTy:$zoomTY realWidth:$realWidth realHeight:$realHeight")
-            translation(zoomTX, zoomTY)
-
-
-//            val zoomView = getZoomView() ?: return
+            val realWidth = (zoomView.width / 2f - nowCenterX) * zoomView.scaleX
+            val realHeight = (zoomView.height / 2f - nowCenterY) * zoomView.scaleY
 //            val realWidth = zoomView.width * zoomView.scaleX
 //            val realHeight = zoomView.height * zoomView.scaleY
-//
-//            val downCenterX = abs(downPoint1.x + downPoint2.x) / 2f
-//            val downCenterY = abs(downPoint1.y + downPoint2.y) / 2f
-//
-//            val nowCenterX = abs(event.getRawX(0) + event.getRawX(1)) / 2f
-//            val nowCenterY = abs(event.getRawY(0) + event.getRawY(1)) / 2f
-//
-//            var tx = realWidth / 2f - nowCenterX
-//            tx = tx * scale - tx
-//
-//            var ty = realHeight / 2f - nowCenterY
-//            ty = ty * scale - ty
-//
-//            translation(tx, ty)
-//            val maxX = realWidth / 2f - zoomView.width / 2f
+            val maxX = realWidth / 2f - zoomView.width / 2f
+            val maxY = realHeight / 2f - zoomView.height / 2f
+
+            translation(maxX, maxY)
 
 
         } else if (status == STATUS_MOVE) { // 单指拖动
             translation(event.rawX - downPoint1.x, event.rawY - downPoint1.y)
         }
 
-        limit()
+//        limit()
     }
 
     fun touchUp(x: Float, y: Float) {
@@ -150,6 +134,12 @@ class ViewZoomController(private val view: ViewGroup) {
         }
         if (zoomView.scaleY < 1) {
             zoomView.scaleY = 1f
+        }
+        if (zoomView.scaleX > 3) {
+            zoomView.scaleX = 3f
+        }
+        if (zoomView.scaleY > 3) {
+            zoomView.scaleY = 3f
         }
         println("---------------------------------------------------------")
         println("=========x:${zoomView.x} y:${zoomView.y}")
