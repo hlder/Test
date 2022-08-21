@@ -1,0 +1,56 @@
+plugins {
+//    id 'java-library'
+    id 'groovy'
+    id 'maven-publish'
+
+}
+
+repositories {
+//    mavenCentral()
+    maven { url 'https://maven.aliyun.com/repository/public' }//jcenter
+    maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }//gradle-plugin
+    maven { url 'https://maven.aliyun.com/repository/central' }//central
+    maven { url 'https://maven.aliyun.com/repository/google' }//google
+}
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+
+    implementation('com.android.tools.build:gradle:3.1.3')
+    implementation('org.javassist:javassist:3.20.0-GA')
+
+}
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_7
+    targetCompatibility = JavaVersion.VERSION_1_7
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.javassist'
+            artifactId = "modify"
+            version = '1.0.0'
+
+            from components.java
+        }
+    }
+
+    repositories{
+        maven {
+            url = '../repo'
+        }
+    }
+}
+//uploadArchives {
+//    // 打包成一个jar，引用jar
+//    repositories.mavenDeployer{
+//        pom.groupId = 'com.javassist'
+//        pom.artifactId = "modify"
+//        pom.version = '1.0.0'
+//
+//        from components.java
+////        repository(url:uri('../repo'))
+//    }
+//}
