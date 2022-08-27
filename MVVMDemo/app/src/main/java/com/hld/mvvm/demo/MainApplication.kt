@@ -20,5 +20,18 @@ class MainApplication:Application() {
         val modules:List<Module> = KoinModuleInit.getListModules(this@MainApplication)
         println("========modules size:${modules.size}")
         loadKoinModules(modules)
+
+        aaaa()
+    }
+
+    private fun aaaa(){
+        val cls = Class.forName("com.hld.koin.loader.KoinLoaderStaticReflect")
+        val method = cls.getMethod("load")
+        val list = method.invoke(cls) as List<Module>
+
+        list.forEach {
+            println("=======item it:${it}")
+        }
+
     }
 }

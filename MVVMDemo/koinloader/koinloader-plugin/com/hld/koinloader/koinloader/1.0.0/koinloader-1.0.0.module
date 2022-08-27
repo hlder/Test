@@ -1,0 +1,77 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.hld.koinloader",
+    "module": "koinloader",
+    "version": "1.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "6.6",
+      "buildId": "r5jlpic4ufbmhepcaepi7fjzlu"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 7,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "koinloader-1.0.0.jar",
+          "url": "koinloader-1.0.0.jar",
+          "size": 33333,
+          "sha512": "fb07aa822fddcdf4781e995c46af18924759180a41d299d664f457dc2de8827d4bd462c9f8d556736825d8a17ce11f86105e5240cee3beb9a69c562e3a8ec31d",
+          "sha256": "8c67e7e46d729d242dc4907179c138991ba4550f3ec8c4096dd74008cf38fffe",
+          "sha1": "b551cca7e4007f62df9d202d9e5a0c9f51662dd6",
+          "md5": "4923cfd0a7f7a5e6711c050580b702d0"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 7,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "com.android.tools.build",
+          "module": "gradle",
+          "version": {
+            "requires": "3.1.3"
+          }
+        },
+        {
+          "group": "org.javassist",
+          "module": "javassist",
+          "version": {
+            "requires": "3.20.0-GA"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "koinloader-1.0.0.jar",
+          "url": "koinloader-1.0.0.jar",
+          "size": 33333,
+          "sha512": "fb07aa822fddcdf4781e995c46af18924759180a41d299d664f457dc2de8827d4bd462c9f8d556736825d8a17ce11f86105e5240cee3beb9a69c562e3a8ec31d",
+          "sha256": "8c67e7e46d729d242dc4907179c138991ba4550f3ec8c4096dd74008cf38fffe",
+          "sha1": "b551cca7e4007f62df9d202d9e5a0c9f51662dd6",
+          "md5": "4923cfd0a7f7a5e6711c050580b702d0"
+        }
+      ]
+    }
+  ]
+}
